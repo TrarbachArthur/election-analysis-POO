@@ -1,0 +1,4 @@
+*.class
+src/data/
+.vscode/
+testes/
