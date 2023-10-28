@@ -7,12 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 public class Eleicao {
+    private int opcaoCargo;
     private Map<Integer, Partido> partidos = new HashMap<Integer, Partido>();
     private Map<Integer, Candidato> candidatos = new HashMap<Integer, Candidato>();
     private List<Candidato> eleitos = new ArrayList<Candidato>();
     private Date data;
 
-    public Eleicao(Date data) {
+    public Eleicao(int opcaoCargo, Date data) {
+        this.opcaoCargo = opcaoCargo;
         this.data = data;
     }
 
@@ -43,5 +45,4 @@ public class Eleicao {
     public Date getData() {
         return data;
     }
-    
 }

@@ -4,22 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Partido {
-    private int qtdVotosLegenda;
+    private int votosLegenda=0;
     private int numero;
     private String nome;
     private String sigla;
     private Map<Integer, Candidato> candidatos = new HashMap<Integer, Candidato>();
 
-    public Partido(int qtdVotosLegenda, int numero, String nome, String sigla, Map<Integer, Candidato> candidatos) {
-        this.qtdVotosLegenda = qtdVotosLegenda;
+    public Partido(int numero, String nome, String sigla) {
         this.numero = numero;
         this.nome = nome;
         this.sigla = sigla;
-        this.candidatos = candidatos;
     }
 
-    public int getQtdVotosLegenda() {
-        return qtdVotosLegenda;
+    public int getVotosLegenda() {
+        return votosLegenda;
     }
 
     public int getNumero() {
@@ -40,5 +38,9 @@ public class Partido {
 
     public void addCandidato(Candidato candidato) {
         this.candidatos.put(candidato.getNumero(), candidato);
-    }    
+    }
+
+    public void processaVotos(int votos) {
+        votosLegenda += votos;
+    }
 }

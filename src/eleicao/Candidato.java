@@ -3,27 +3,66 @@ package eleicao;
 import java.util.Date;
 
 public class Candidato {
-    private String nome;
+    public enum TipoCandidato {
+        FEDERAL(6), ESTADUAL(7);
+
+        private int valor;
+
+        TipoCandidato(int valor) {
+            this.valor = valor;
+            }
+
+        public static TipoCandidato parseInt(int codigo) {
+            if (codigo == FEDERAL.valor)
+                return FEDERAL;
+            else
+                return ESTADUAL;
+        }
+    }
+
+    public enum Genero {
+        MASCULINO(2), FEMININO(4);
+
+        private int valor;
+
+        Genero(int valor) {
+            this.valor = valor;
+        }
+
+        public static Genero parseInt(int codigo) {
+            if (codigo == MASCULINO.valor)
+                return MASCULINO;
+            else
+                return FEMININO;
+        }
+    }
+
+    private TipoCandidato tipo;
     private int numero;
+    private String nome;
     private Partido partido;
-    private int votos;
-    private boolean ehEleito;
+    private boolean ehFederado;
     private Date dataNascimento;
-    private int numeroFederacao;
-    private int genero;
+    private boolean ehEleito;
+    private int votosNominais=0;
+    private Genero genero;
     private boolean ehVotoLegenda;
 
-    public Candidato(String nome, int numero, Partido partido, int votos, boolean ehEleito, Date dataNascimento,
-            int numeroFederacao, int genero, boolean ehVotoLegenda) {
+    public Candidato(int tipo, int numero, String nome, Partido partido, boolean ehFederado, Date dataNascimento, boolean ehEleito,
+            int genero, boolean ehVotoLegenda) {
+        this.tipo = TipoCandidato.parseInt(tipo);
         this.nome = nome;
         this.numero = numero;
         this.partido = partido;
-        this.votos = votos;
         this.ehEleito = ehEleito;
         this.dataNascimento = dataNascimento;
-        this.numeroFederacao = numeroFederacao;
-        this.genero = genero;
+        this.ehFederado = ehFederado;
+        this.genero = Genero.parseInt(genero);
         this.ehVotoLegenda = ehVotoLegenda;
+    }
+
+    public TipoCandidato getTipo() {
+        return tipo;
     }
 
     public String getNome() {
@@ -39,10 +78,10 @@ public class Candidato {
     }
 
     public int getVotos() {
-        return votos;
+        return votosNominais;
     }
 
-    public boolean isEhEleito() {
+    public boolean ehEleito() {
         return ehEleito;
     }
 
@@ -50,16 +89,29 @@ public class Candidato {
         return dataNascimento;
     }
 
-    public int getNumeroFederacao() {
-        return numeroFederacao;
+    public boolean ehFederado() {
+        return ehFederado;
     }
 
-    public int getGenero() {
+    public Genero getGenero() {
         return genero;
     }
 
-    public boolean isEhVotoLegenda() {
+    public boolean ehVotoLegenda() {
         return ehVotoLegenda;
     }
-    
+
+    public void processaVotos(int votos) {
+        if (ehVotoLegenda()) {
+            partido.processaVotos(votos);
+        }
+        else {
+            this.votosNominais += votos;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return this.nome + " (" + this.partido.getSigla() + "," + this.getVotos() + ")";
+    }
 }
