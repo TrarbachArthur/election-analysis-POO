@@ -1,7 +1,5 @@
 package eleicao;
 
-public package eleicao;
-
 import java.util.Date;
 
 public class Candidato {
@@ -51,17 +49,18 @@ public class Candidato {
     private boolean ehVotoLegenda;
 
     public Candidato(int tipo, int numero, String nome, Partido partido, boolean ehFederado, Date dataNascimento, boolean ehEleito,
-            int genero, boolean ehVotoLegenda, int votosNominais) {
+            int genero, boolean ehVotoLegenda) {
         this.tipo = TipoCandidato.parseInt(tipo);
         this.nome = nome;
         this.numero = numero;
         this.partido = partido;
         this.ehEleito = ehEleito;
-        this.votosNominais = votosNominais;
         this.dataNascimento = dataNascimento;
         this.ehFederado = ehFederado;
         this.genero = Genero.parseInt(genero);
         this.ehVotoLegenda = ehVotoLegenda;
+
+        partido.addCandidato(this);
     }
 
     public TipoCandidato getTipo() {
@@ -117,47 +116,4 @@ public class Candidato {
     public String toString() {
         return this.nome + " (" + this.partido.getSigla() + "," + this.getVotos() + ")";
     }
-
-    public void setTipo(int tipo) {
-        this.tipo = TipoCandidato.parseInt(tipo);
-    }
-
-    public void setNumero(int numero) {
-        this.numero = numero;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public void setPartido(Partido partido) {
-        this.partido = partido;
-    }
-
-    public void setEhFederado(boolean ehFederado) {
-        this.ehFederado = ehFederado;
-    }
-
-    public void setDataNascimento(Date dataNascimento) {
-        this.dataNascimento = dataNascimento;
-    }
-
-    public void setEhEleito(boolean ehEleito) {
-        this.ehEleito = ehEleito;
-    }
-
-    public void setVotosNominais(int votosNominais) {
-        this.votosNominais = votosNominais;
-    }
-
-    public void setGenero(int g) {
-        this.genero = Genero.parseInt(g);;
-    }
-
-    public void setEhVotoLegenda(boolean ehVotoLegenda) {
-        this.ehVotoLegenda = ehVotoLegenda;
-    }
-}
- {
-    
 }

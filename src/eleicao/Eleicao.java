@@ -45,4 +45,44 @@ public class Eleicao {
     public Date getData() {
         return data;
     }
+
+    public void processaCandidato(int cargo, int numeroCand, String nomeCand, int numeroPart, String siglaPart,
+                        boolean ehFederado, Date dataNasc, boolean ehEleito, int genero, boolean ehVotoLegenda) {
+        
+        if (cargo != this.opcaoCargo) return; // Ignora candidatos de outros cargos
+        
+        Partido partido = partidos.get(numeroPart);                    
+        
+        if (partido == null) { // Cria partido caso ainda nao exista
+            partido = new Partido(numeroPart, siglaPart);
+            partidos.put(partido.getNumero(), partido);
+        }
+
+        Candidato candidato = new Candidato(cargo, numeroCand, nomeCand, partido, ehFederado, dataNasc, ehEleito, genero, ehVotoLegenda);
+        candidatos.put(candidato.getNumero(), candidato);
+
+        if (candidato.ehEleito()) {
+            eleitos.add(candidato);
+        }
+    }
+
+    public void processaVotos(int cargo, int numeroVotado, int qtdVotos) {
+        if (cargo != this.opcaoCargo) return; // Ignora candidatos de outros cargos
+
+        // Processando numero de candidato
+        Candidato candidato = candidatos.get(numeroVotado); 
+
+        if (candidato != null) {
+            candidato.processaVotos(qtdVotos);
+            return;
+        }
+
+        // Processando numero de partido
+        Partido partido = partidos.get(numeroVotado);
+
+        if (partido != null) {
+            partido.processaVotos(qtdVotos);
+            return;
+        }
+    }
 }
