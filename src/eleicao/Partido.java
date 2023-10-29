@@ -4,15 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Partido {
-    private int votosLegenda=0;
+    private int votosLegenda;
     private int numero;
-    private String nome;
     private String sigla;
     private Map<Integer, Candidato> candidatos = new HashMap<Integer, Candidato>();
 
-    public Partido(int numero, String nome, String sigla) {
+    public Partido(int numero, String sigla) {
+        this.votosLegenda = 0;
         this.numero = numero;
-        this.nome = nome;
         this.sigla = sigla;
     }
 
@@ -22,10 +21,6 @@ public class Partido {
 
     public int getNumero() {
         return numero;
-    }
-
-    public String getNome() {
-        return nome;
     }
 
     public String getSigla() {

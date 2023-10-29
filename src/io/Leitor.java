@@ -1,9 +1,17 @@
 package io;
 
 import java.io.FileInputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+
+import eleicao.Candidato;
+import eleicao.Eleicao;
+import eleicao.Partido;
+import eleicao.Candidato.Genero;
 
 public class Leitor {
     private static final int IN_CAP_VOT = 1200000;
@@ -33,7 +41,7 @@ public class Leitor {
         return y;
     }
 
-    public static void main(String[] args) {
+    public Eleicao leArquivos(Eleicao e, String caminhoArquivoVotacao, String caminhoArquivoCandidatos) {
     List<Integer> cargos = new ArrayList<Integer>(IN_CAP_VOT);
     List<Integer> nr_votaveis = new ArrayList<Integer>(IN_CAP_VOT);
     List<Integer> qt_votos = new ArrayList<Integer>(IN_CAP_VOT);
@@ -48,9 +56,10 @@ public class Leitor {
     List<Integer> cd_sit = new ArrayList<Integer>(IN_CAP_CAND);
     List<Integer> cd_gen = new ArrayList<Integer>(IN_CAP_CAND);
     List<String> nm_tipo = new ArrayList<String>(IN_CAP_CAND); 
+    List<Candidato> candidatos = new ArrayList<>(IN_CAP_CAND);
 
         // LENDO O ARQ DE VOTAÇÃO
-        try (FileInputStream fin = new FileInputStream("votacao_secao_2022_ES\\votacao_secao_2022_ES.txt");
+        try (FileInputStream fin = new FileInputStream(caminhoArquivoVotacao);
                 Scanner s = new Scanner(fin, "UTF-8")) {
                     s.nextLine();
             while (s.hasNextLine()) {
@@ -59,16 +68,18 @@ public class Leitor {
                 cargos.add(le_conteudo_int(CD_CARGO, separaded));
                 nr_votaveis.add(le_conteudo_int(NR_VOTAVEL, separaded));
                 qt_votos.add(le_conteudo_int(QT_VOTOS, separaded));
+                candidatos.add(null);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception e1) {
+            e1.printStackTrace();
         }
         // System.out.println(cargos);
         // System.out.println(nr_votaveis);
         // System.out.println(qt_votos);
 
         // LENDO O ARQ DE CANDIDATOS
-        try (FileInputStream fin = new FileInputStream("votacao_secao_2022_ES\\consulta_cand_2022_ES.txt");
+        int qtd_cands =0;
+        try (FileInputStream fin = new FileInputStream(caminhoArquivoCandidatos);
                 Scanner s = new Scanner(fin, "UTF-8")) {
                 s.nextLine();
             while (s.hasNextLine()) {
@@ -85,12 +96,55 @@ public class Leitor {
                 cd_sit.add(le_conteudo_int(CD_SIT, separaded));
                 cd_gen.add(le_conteudo_int(CD_GEN, separaded));
                 nm_tipo.add(le_conteudo_string(NM_TIPO, separaded));
+                qtd_cands++;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception e2) {
+            e2.printStackTrace();
         }
+
+        int i =0;
+        for (int j = 0; j<qtd_cands; j++){
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+            int genero = cd_gen.get(i);
+            Date date = null;
+            try {
+                date = new java.sql.Date(format.parse(dt_nasc.get(i)).getTime());
+            } catch (ParseException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+            // COMO SEI SE FOI ELEITO c.setEhEleito(false);
+            boolean ehFederado;
+            if (nr_fed.get(i) != -1){
+                 ehFederado= false;
+            }
+            else{ ehFederado = true;}
+
+            boolean ehVotoLegenda;
+            if (nm_tipo.get(i) == "Válido (legenda)"){
+                ehVotoLegenda = true;
+            }
+            else {
+                ehVotoLegenda = false;
+            }
+
+            String nome = nm_urna.get(i);
+            int nr_cand = nr_cands.get(i);
+            Partido p = new Partido(nr_partido.get(i), sg_partido.get(i));
+            e.addPartido(p);
+            int tipo = cargos_cand.get(i);
+            int qtd_v = qt_votos.get(i);
+            Candidato c = new Candidato(tipo, nr_cand, nome, p, ehFederado, date, ehFederado, genero, ehVotoLegenda, qtd_v);
+            e.addCandidato(c);
+            System.out.println(c.getNumero());
+            System.out.println(c.getDataNascimento());
+            i++;
+        }
+        System.out.println(e);
+        // Candidato c = new Candidato(, CD_CARGO_CAND, caminhoArquivoCandidatos, null, false, null, false, CD_CARGO, false)
         // System.out.println(lines.get(0));
         // System.out.println(lines.get(1000));
-        System.out.println(dt_nasc);
+        //System.out.println(dt_nasc);
+        return e;
         }
 }

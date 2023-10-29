@@ -2,6 +2,7 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import eleicao.Eleicao;
+import io.Leitor;
 
 // Imports para teste, lembrar de remover
 import eleicao.Candidato;
@@ -29,16 +30,18 @@ public class App {
             }
 
             Eleicao eleicao = new Eleicao(opcaoCargo, data);
+            
             // TODO: ajustar leitor para classe utilizavel abaixo :P
-            //Leitor leitor = new Leitor()
+            Leitor leitor = new Leitor();
+            eleicao = leitor.leArquivos(eleicao, caminhoArquivoVotacao, caminhoArquivoCandidatos);
            
            /* 
                 Apenas testes, lembrar de remover depois
            */
-            Candidato candidato = new Candidato(opcaoCargo, 1, "Candidato 1", new Partido(1, "Partido 1", "P1"), false, new Date(), true, 2, false);
-            candidato.processaVotos(8500);
-            candidato.processaVotos(1000);
+            //Candidato candidato = new Candidato(opcaoCargo, 1, "Candidato 1", new Partido(1, "Partido 1", "P1"), false, new Date(), true, 2, false);
+            //candidato.processaVotos(8500);
+            //candidato.processaVotos(1000);
 
-            System.out.println(candidato);
+            //System.out.println(candidato);
         }
 }
