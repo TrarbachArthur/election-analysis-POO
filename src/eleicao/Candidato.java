@@ -38,6 +38,7 @@ public class Candidato {
     }
 
     private TipoCandidato tipo;
+    private boolean ehDeferido;
     private int numero;
     private String nome;
     private Partido partido;
@@ -48,9 +49,10 @@ public class Candidato {
     private Genero genero;
     private boolean ehVotoLegenda;
 
-    public Candidato(int tipo, int numero, String nome, Partido partido, boolean ehFederado, Date dataNascimento, boolean ehEleito,
+    public Candidato(int tipo, boolean ehDeferido, int numero, String nome, Partido partido, boolean ehFederado, Date dataNascimento, boolean ehEleito,
             int genero, boolean ehVotoLegenda) {
         this.tipo = TipoCandidato.parseInt(tipo);
+        this.ehDeferido = ehDeferido;
         this.nome = nome;
         this.numero = numero;
         this.partido = partido;
@@ -65,6 +67,10 @@ public class Candidato {
 
     public TipoCandidato getTipo() {
         return tipo;
+    }
+    
+    public boolean ehDeferido() {
+        return ehDeferido;
     }
 
     public String getNome() {

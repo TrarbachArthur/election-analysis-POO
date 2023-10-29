@@ -49,9 +49,11 @@ public class App {
         }
         System.out.println("");
 
+        System.out.println("Quantidade de partidos: " + eleicao.getPartidos().size());
+
         for (Partido p: eleicao.getPartidos().values()) {
             System.out.println(p + "\n--------------------------------------------------------------------------");
-            for (Candidato c: p.getCandidatos().values()) {
+            for (Candidato c: p.getCandidatosDeferidos().values()) {
                 System.out.println(c);
             }
             System.out.println("\n--------------------------------------------------------------------------\n");
