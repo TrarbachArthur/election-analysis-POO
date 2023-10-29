@@ -64,29 +64,25 @@ public class Leitor {
                     System.out.println("Data inválida");
                     e.printStackTrace();
                     
-                    continue; // Ignora candidatos com data de nascimento invalida
+                    //continue; // Ignora candidatos com data de nascimento invalida
                 }
 
-                boolean ehFederado;
+                boolean ehFederado = true;
                 if (numeroFederacao == -1) {ehFederado= false;}
-                else{ ehFederado = true;}
                 
-                boolean ehEleito;
+                boolean ehEleito = false;
                 if (situacaoTurno == 2 || situacaoTurno == 3) {ehEleito = true;}
-                else {ehEleito = false;}
 
-                boolean ehVotoLegenda;
+                boolean ehVotoLegenda = false;
                 if (strTipoVoto == "Válido (legenda)") {ehVotoLegenda = true;}
-                else {ehVotoLegenda = false;}
 
-                // Processando apenas candidaturas deferidas
-                if (situacaoCandidatura == 2 || situacaoCandidatura == 16) {
-                    eleicao.processaCandidato(
-                        cargo, numeroCandidato, nomeCandidato, numeroPartido, siglaPartido,
-                        ehFederado, dataNascimento, ehEleito, genero, ehVotoLegenda
-                    );
-                }
+                boolean ehDeferido = false;
+                if (situacaoCandidatura == 2 || situacaoCandidatura == 16) {ehDeferido = true;}
 
+                eleicao.processaCandidato(
+                    cargo, ehDeferido, numeroCandidato, nomeCandidato, numeroPartido, siglaPartido,
+                    ehFederado, dataNascimento, ehEleito, genero, ehVotoLegenda
+                );
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -112,6 +108,5 @@ public class Leitor {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
     }
 }

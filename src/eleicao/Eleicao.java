@@ -46,10 +46,8 @@ public class Eleicao {
         return data;
     }
 
-    public void processaCandidato(int cargo, int numeroCand, String nomeCand, int numeroPart, String siglaPart,
+    public void processaCandidato(int cargo, boolean ehDeferido, int numeroCand, String nomeCand, int numeroPart, String siglaPart,
                         boolean ehFederado, Date dataNasc, boolean ehEleito, int genero, boolean ehVotoLegenda) {
-        
-        if (cargo != this.opcaoCargo) return; // Ignora candidatos de outros cargos
         
         Partido partido = partidos.get(numeroPart);                    
         
@@ -58,7 +56,9 @@ public class Eleicao {
             partidos.put(partido.getNumero(), partido);
         }
 
-        Candidato candidato = new Candidato(cargo, numeroCand, nomeCand, partido, ehFederado, dataNasc, ehEleito, genero, ehVotoLegenda);
+        if (cargo != this.opcaoCargo) return; // Ignora candidatos de outros cargos
+
+        Candidato candidato = new Candidato(cargo, ehDeferido, numeroCand, nomeCand, partido, ehFederado, dataNasc, ehEleito, genero, ehVotoLegenda);
         candidatos.put(candidato.getNumero(), candidato);
 
         if (candidato.ehEleito()) {
