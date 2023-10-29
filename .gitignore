@@ -3,3 +3,5 @@ src/data/
 .vscode/
 testes/
 sources.txt
+test.sh
+results.txt

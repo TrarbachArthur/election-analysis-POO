@@ -38,4 +38,9 @@ public class Partido {
     public void processaVotos(int votos) {
         votosLegenda += votos;
     }
+
+    @Override
+    public String toString() {
+        return this.sigla + " (" + this.getNumero() + ") - " + this.getVotosLegenda() + " votos de legenda";
+    }
 }
