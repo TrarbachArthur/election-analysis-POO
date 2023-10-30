@@ -1,8 +1,9 @@
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
-import java.util.Date;
+import java.time.format.*;
+import java.time.LocalDate;
 import eleicao.Eleicao;
-import io.Leitor;
+import io.*;
 
 // Imports para teste, lembrar de remover
 import eleicao.Candidato;
@@ -15,26 +16,39 @@ public class App {
             System.exit(1);
         }
 
-        int opcaoCargo = Integer.parseInt(args[0]);
+        int opcaoCargo;
+        switch(args[0]) {
+            case "--federal":
+                opcaoCargo = 6;
+                break;
+            case "--estadual":
+                opcaoCargo = 7;
+                break;
+            default:
+                throw new RuntimeException("Opção de cargo inválida");
+        }
+        
         String caminhoArquivoCandidatos = args[1];
         String caminhoArquivoVotacao = args[2];
-        Date data = null;
+        LocalDate data = null;
 
         try {
-            data = new SimpleDateFormat("dd/MM/yyyy").parse(args[3]);
+            data = LocalDate.parse(args[3], DateTimeFormatter.ofPattern("d/MM/yyyy"));
         }
-        catch (ParseException e) {
+        catch (DateTimeParseException e) {
             System.out.println("Data inválida");
             e.printStackTrace();
             System.exit(1);
         }
 
         Eleicao eleicao = new Eleicao(opcaoCargo, data);
+
+        Leitor.leArquivos(eleicao, caminhoArquivoVotacao, caminhoArquivoCandidatos);
         
-        // TODO: ajustar leitor para classe utilizavel abaixo :P
-        Leitor leitor = new Leitor();
-        leitor.leArquivos(eleicao, caminhoArquivoVotacao, caminhoArquivoCandidatos);
-        
+        Relatorio.geraRelatorio8(eleicao);
+        Relatorio.geraRelatorio9(eleicao);
+        Relatorio.geraRelatorio10(eleicao);
+
         /* 
             Apenas testes, lembrar de remover depois
         */
@@ -42,7 +56,7 @@ public class App {
         for (Candidato c: eleicao.getCandidatos().values()) {
             System.out.println(c);
         }
-        */
+        
         System.out.println("Candidatos eleitos: ");
         for (Candidato c: eleicao.getEleitos()) {
             System.out.println(c);
@@ -58,5 +72,6 @@ public class App {
             }
             System.out.println("\n--------------------------------------------------------------------------\n");
         }
+        */        
     }
 }

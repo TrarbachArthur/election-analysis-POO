@@ -1,7 +1,7 @@
 package eleicao;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,9 +11,9 @@ public class Eleicao {
     private Map<Integer, Partido> partidos = new HashMap<Integer, Partido>();
     private Map<Integer, Candidato> candidatos = new HashMap<Integer, Candidato>();
     private List<Candidato> eleitos = new ArrayList<Candidato>();
-    private Date data;
+    private LocalDate data;
 
-    public Eleicao(int opcaoCargo, Date data) {
+    public Eleicao(int opcaoCargo, LocalDate data) {
         this.opcaoCargo = opcaoCargo;
         this.data = data;
     }
@@ -42,22 +42,38 @@ public class Eleicao {
         this.eleitos.add(eleito);
     }
 
-    public Date getData() {
+    public LocalDate getData() {
         return data;
     }
 
     public void processaCandidato(int cargo, boolean ehDeferido, int numeroCand, String nomeCand, int numeroPart, String siglaPart,
-                        boolean ehFederado, Date dataNasc, boolean ehEleito, int genero, boolean ehVotoLegenda) {
+                        boolean ehFederado, LocalDate dataNasc, boolean ehEleito, int genero, boolean ehVotoLegenda) {                  
         
-        Partido partido = partidos.get(numeroPart);                    
-        
+        Partido partido = partidos.get(numeroPart);
+
         if (partido == null) { // Cria partido caso ainda nao exista
             partido = new Partido(numeroPart, siglaPart);
             partidos.put(partido.getNumero(), partido);
         }
 
         if (cargo != this.opcaoCargo) return; // Ignora candidatos de outros cargos
+        if (!ehDeferido && !ehVotoLegenda) return;
 
+        Candidato c = candidatos.get(numeroCand);
+        if (c != null) {
+            if (c.ehDeferido()) {
+                System.out.println("Tentou trocar deferido!");
+                return;
+            }
+            else if (c.ehVotoLegenda() && !ehDeferido){
+                System.out.println("Tentou trocar voto legenda");
+                return;
+            }
+            else {
+                System.out.println("Fez nada");
+            }
+        }
+        
         Candidato candidato = new Candidato(cargo, ehDeferido, numeroCand, nomeCand, partido, ehFederado, dataNasc, ehEleito, genero, ehVotoLegenda);
         candidatos.put(candidato.getNumero(), candidato);
 
@@ -70,11 +86,13 @@ public class Eleicao {
         if (cargo != this.opcaoCargo) return; // Ignora candidatos de outros cargos
 
         // Processando numero de candidato
-        Candidato candidato = candidatos.get(numeroVotado); 
-
-        if (candidato != null) {
-            candidato.processaVotos(qtdVotos);
+        if (candidatos.containsKey(numeroVotado)) {
+            candidatos.get(numeroVotado).processaVotos(qtdVotos);
             return;
+        }
+
+        while (numeroVotado >= 100) {
+            numeroVotado %= 10;
         }
 
         // Processando numero de partido
@@ -84,5 +102,7 @@ public class Eleicao {
             partido.processaVotos(qtdVotos);
             return;
         }
+
+        //System.out.println("Não encontrei esse cara " + numeroVotado);
     }
 }

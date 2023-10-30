@@ -3,7 +3,8 @@ package io;
 import java.io.FileInputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.format.*;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 import eleicao.Eleicao;
@@ -34,7 +35,7 @@ public class Leitor {
         return y;
     }
 
-    public void leArquivos(Eleicao eleicao, String caminhoArquivoVotacao, String caminhoArquivoCandidatos) {
+    public static void leArquivos(Eleicao eleicao, String caminhoArquivoVotacao, String caminhoArquivoCandidatos) {
         // LENDO O ARQ DE CANDIDATOS
         try (FileInputStream fin = new FileInputStream(caminhoArquivoCandidatos);
                 Scanner s = new Scanner(fin, "ISO-8859-1")) {
@@ -56,15 +57,13 @@ public class Leitor {
                 int genero = (le_conteudo_int(CD_GEN, separated));
                 String strTipoVoto = (le_conteudo_string(NM_TIPO, separated));
                 
-                Date dataNascimento = null;
+                LocalDate dataNascimento = null;
                 try {
-                    dataNascimento = new SimpleDateFormat("dd/MM/yyyy").parse(strNascimento);
+                    dataNascimento = LocalDate.parse(strNascimento, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                 }
-                catch (ParseException e) {
+                catch (DateTimeParseException e) {
                     System.out.println("Data inválida");
                     e.printStackTrace();
-                    
-                    //continue; // Ignora candidatos com data de nascimento invalida
                 }
 
                 boolean ehFederado = true;
@@ -74,7 +73,7 @@ public class Leitor {
                 if (situacaoTurno == 2 || situacaoTurno == 3) {ehEleito = true;}
 
                 boolean ehVotoLegenda = false;
-                if (strTipoVoto == "Válido (legenda)") {ehVotoLegenda = true;}
+                if (strTipoVoto.equalsIgnoreCase("Válido (legenda)")) {ehVotoLegenda = true;}
 
                 boolean ehDeferido = false;
                 if (situacaoCandidatura == 2 || situacaoCandidatura == 16) {ehDeferido = true;}
