@@ -102,14 +102,8 @@ public class Eleicao {
 
     Candidato c = candidatos.get(numeroCand);
     if (c != null) {
-      if (c.ehDeferido()) {
-        System.out.println("Tentou trocar deferido!");
+      if (c.ehDeferido() || (c.ehVotoLegenda() && !ehDeferido)) {
         return;
-      } else if (c.ehVotoLegenda() && !ehDeferido) {
-        System.out.println("Tentou trocar voto legenda");
-        return;
-      } else {
-        System.out.println("Fez nada");
       }
     }
 
