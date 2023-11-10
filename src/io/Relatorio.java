@@ -131,7 +131,7 @@ public class Relatorio {
       int votosNominais = votosTotais - votosLegenda;
 
       String s =
-        nfInt.format(votosTotais) + (votosTotais > 1 ? "votos (" : "voto (");
+        nfInt.format(votosTotais) + (votosTotais > 1 ? " votos (" : " voto (");
       s +=
         nfInt.format(votosNominais) +
         ((votosNominais > 0) ? " nominais e " : " nominal e ");
