@@ -1,0 +1,166 @@
+@startuml deputados
+
+interface Comparable {}
+
+package "eleicao" {
+    class Candidato{
+        -tipo: TipoCandidato
+        -ehDeferido: boolean
+        -numero: int
+        -nome: String
+        -partido: Partido
+        -ehFederado: boolean
+        -dataNascimento: LocalDate
+        -ehEleito: boolean
+        -votosNominais: int
+        -genero: Genero
+
+        ..Getters e Setters..
+
+        +processaVotos(int) : void
+        +toString() : String
+        +compareTo(Candidato) : int
+    }
+
+    Candidato <|-- Comparable
+
+    class Partido{
+        -votosLegenda: int
+        -numero: int
+        -sigla: String
+        -candidatosDeferidos: Map<Integer, Candidato>
+        -candidatosIndeferidos: Map<Integer, Candidato>
+        -qtdEleitos: int
+        -candidatosMaisVotados: List<Candidato>
+
+        ..Getters e Setters..
+
+        +addCandidato(Candidato) : void
+        +processaVotos(int) :void
+        +getVotosTotais() : int
+        +ProcessaCandidatosMaisVotados() : void
+        +toString() : String
+        +compareTo(Partido) : int
+    }
+
+    Partido <|-- Comparable
+    Partido "0-1"<-> "0.." Candidato
+
+    class Eleicao {
+        -opcaoCargo: TipoCandidato
+        -partidos: Map<Integer, Partido>
+        -candidatos: Map<Integer, Candidato>
+        -eleitos: List<Candidato>
+        -data: LocalDate
+        -numeroVagas: int
+        -candidatosMaisVotados: List<Candidato>
+        -partidosMaisVotados: List<Partido>
+
+        ..Getters e Setters..
+
+        +processaCandidato(
+            TipoCandidato cargo,
+            boolean ehDeferido,
+            int numeroCand,
+            String nomeCand,
+            int numeroPart,
+            String siglaPart,
+            boolean ehFederado,
+            LocalDate dataNasc,
+            boolean ehEleito,
+            Genero genero,
+            boolean ehVotoLegenda
+        ) : void
+        +processaVotos(
+            TipoCandidato cargo,
+            int numeroVotado,
+            int qtdVotos
+        ) : void
+        +processaEleicao() : void
+    }
+    Eleicao <-- "0.." Candidato
+    Eleicao <-- "0.." Partido
+}
+
+package "io" {
+    class Leitor {
+        -eleicao: Eleicao
+        -caminhoArquivoCandidatos: String
+        -caminhoArquivoVotacao: String
+
+        -{static} CD_CARGO: int
+        -{static} NR_VOTAVEL: int
+        -{static} QT_VOTOS: int
+        -{static} CD_CARGO_CAND: int
+        -{static} CD_SITU: int
+        -{static} NR_CAND: int
+        -{static} NM_URNA: int
+        -{static} NR_PART: int
+        -{static} SG_PART: int
+        -{static} NR_FED: int
+        -{static} DT_NASC: int
+        -{static} CD_SIT: int
+        -{static} CD_GEN: int
+        -{static} NM_TIPO: int
+
+        -{static}le_conteudo_string(int index, String[]): String
+        -{static}le_conteudo_int(int index, String[]): Integer
+
+        +leArquivos() : void
+    }
+
+    Leitor -> "1" Eleicao
+
+    class Relatorio {
+        -eleicao: Eleicao
+        -{static}nfFloat: NumberFormat
+        -{static}nfInt: NumberFormat
+
+        +geraRelatorio1(): void
+        +geraRelatorio2(): void
+        +geraRelatorio3(): void
+        +geraRelatorio4(): void
+        +geraRelatorio5(): void
+        +geraRelatorio6(): void
+        +geraRelatorio7(): void
+        +geraRelatorio8(): void
+        +geraRelatorio9(): void
+        +geraRelatorio10(): void
+        +geraRelatorios(): void
+    }
+
+    Relatorio -> "1" Eleicao
+}
+
+package "util" {
+    enum Genero {
+        MASCULINO(2), FEMININO(4)
+        -valor: int
+
+        +{static}parseInt(int): Genero
+        +getInt(): int
+    }
+
+    enum TipoCandidato {
+        OUTRO(0), FEDERAL(6), ESTADUAL(7)
+        -valor: int
+
+        +{static} parseInt(int): TipoCandidato
+        -getInt(): int
+    }
+}
+
+class App {
+    +{static}main(String[] args) : void
+}
+
+Candidato -> "1" TipoCandidato
+Candidato -> "1" Genero
+Eleicao o- TipoCandidato
+Eleicao o- Genero
+
+App o- Eleicao
+App o- Leitor
+App o- Relatorio
+
+@enduml
