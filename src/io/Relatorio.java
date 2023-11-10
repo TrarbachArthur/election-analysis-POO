@@ -157,13 +157,10 @@ public class Relatorio {
         if (p1MaisVotados.isEmpty()) return 1;
         if (p2MaisVotados.isEmpty()) return -1;
 
-        int dif = p1
-          .getCandidatosMaisVotados()
-          .get(0)
-          .compareTo(p2.getCandidatosMaisVotados().get(0));
+        int dif = p2MaisVotados.get(0).getVotos() - p1MaisVotados.get(0).getVotos();
         if (dif != 0) return dif;
 
-        return p2.getNumero() - p1.getNumero();
+        return  p1.getNumero() - p2.getNumero();
       }
     };
 
