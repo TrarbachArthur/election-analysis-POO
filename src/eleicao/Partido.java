@@ -1,53 +1,96 @@
 package eleicao;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class Partido {
-    private int votosLegenda;
-    private int numero;
-    private String sigla;
-    private Map<Integer, Candidato> candidatosDeferidos = new HashMap<Integer, Candidato>();
-    private Map<Integer, Candidato> candidatosIndeferidos = new HashMap<Integer, Candidato>();
+public class Partido implements Comparable<Partido> {
 
+  private int votosLegenda;
+  private int numero;
+  private String sigla;
+  private Map<Integer, Candidato> candidatosDeferidos = new HashMap<Integer, Candidato>();
+  private Map<Integer, Candidato> candidatosIndeferidos = new HashMap<Integer, Candidato>();
 
-    public Partido(int numero, String sigla) {
-        this.votosLegenda = 0;
-        this.numero = numero;
-        this.sigla = sigla;
+  private int qtdEleitos;
+  private List<Candidato> candidatosMaisVotados;
+
+  public Partido(int numero, String sigla) {
+    this.votosLegenda = 0;
+    this.numero = numero;
+    this.sigla = sigla;
+  }
+
+  public int getVotosLegenda() {
+    return votosLegenda;
+  }
+
+  public int getNumero() {
+    return numero;
+  }
+
+  public String getSigla() {
+    return sigla;
+  }
+
+  public Map<Integer, Candidato> getCandidatosDeferidos() {
+    return new HashMap<Integer, Candidato>(candidatosDeferidos);
+  }
+
+  public Map<Integer, Candidato> getCandidatosIndeferidos() {
+    return new HashMap<Integer, Candidato>(candidatosIndeferidos);
+  }
+
+  public void addCandidato(Candidato candidato) {
+    if (candidato.ehDeferido()) {
+      this.candidatosDeferidos.put(candidato.getNumero(), candidato);
+
+      if (candidato.ehEleito()) qtdEleitos++;
+    } else this.candidatosIndeferidos.put(candidato.getNumero(), candidato);
+  }
+
+  public int getQtdEleitos() {
+    return qtdEleitos;
+  }
+
+  public List<Candidato> getCandidatosMaisVotados() {
+    return new ArrayList<Candidato>(candidatosMaisVotados);
+  }
+
+  public void processaVotos(int votos) {
+    votosLegenda += votos;
+  }
+
+  public int getVotosTotais() {
+    int votosTotais = this.getVotosLegenda();
+
+    for (Candidato c : candidatosDeferidos.values()) {
+      votosTotais += c.getVotos();
     }
 
-    public int getVotosLegenda() {
-        return votosLegenda;
-    }
+    return votosTotais;
+  }
 
-    public int getNumero() {
-        return numero;
-    }
+  public void processaCandidatosMaisVotados() {
+    candidatosMaisVotados =
+      new ArrayList<Candidato>(candidatosDeferidos.values());
 
-    public String getSigla() {
-        return sigla;
-    }
+    Collections.sort(candidatosMaisVotados);
+  }
 
-    public Map<Integer, Candidato> getCandidatosDeferidos() {
-        return new HashMap<Integer, Candidato>(candidatosDeferidos);
-    }
+  @Override
+  public String toString() {
+    return getSigla() + " - " + getNumero();
+  }
 
-    public Map<Integer, Candidato> getCandidatosIndeferidos() {
-        return new HashMap<Integer, Candidato>(candidatosIndeferidos);
-    }
+  @Override
+  public int compareTo(Partido p) {
+    int dif = p.getVotosTotais() - this.getVotosTotais();
 
-    public void addCandidato(Candidato candidato) {
-        if (candidato.ehDeferido()) this.candidatosDeferidos.put(candidato.getNumero(), candidato);
-        else this.candidatosIndeferidos.put(candidato.getNumero(), candidato);
-    }
+    if (dif != 0) return dif;
 
-    public void processaVotos(int votos) {
-        votosLegenda += votos;
-    }
-
-    @Override
-    public String toString() {
-        return this.sigla + " (" + this.getNumero() + ") - " + this.getVotosLegenda() + " votos de legenda";
-    }
+    return (this.getNumero() - p.getNumero());
+  }
 }
