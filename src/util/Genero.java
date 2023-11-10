@@ -12,8 +12,9 @@ public enum Genero {
     public static Genero parseInt(int codigo) {
         if (codigo == MASCULINO.valor)
             return MASCULINO;
-        else
+        else if (codigo == FEMININO.valor)
             return FEMININO;
+        return null;
     }
 
     public int getInt() {
